@@ -35,7 +35,12 @@ public class TobyManager : MonoBehaviour
 
     private void NextDestination()
     {
-        indexNextDestination = Random.Range(0, targetPoints.Count);
+        int oldIndex = indexNextDestination;
+        while(oldIndex == indexNextDestination && targetPoints.Count >1)   // pour évité boucle infini -> targetPoints>1 -> plus d'un point de ref
+        {
+            indexNextDestination = Random.Range(0, targetPoints.Count);
+        }
+        
         actualDestination = targetPoints[indexNextDestination].GivePoint();
         agent.SetDestination(actualDestination);
         indexNextDestination++;
