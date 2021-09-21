@@ -11,13 +11,15 @@ public class TobyManager : MonoBehaviour
 
     public List<TargetPoint> targetPoints = new List<TargetPoint>();
 
-    private int indexNextDestination = 0;
+    private int indexNextDestination;
     private Vector3 actualDestination;
 
     // Start is called before the first frame update
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        agent.avoidancePriority = Random.Range(1, 100);
+        agent.speed = Random.Range(1f, 6f);
         NextDestination();
     }
 
@@ -33,6 +35,7 @@ public class TobyManager : MonoBehaviour
 
     private void NextDestination()
     {
+        indexNextDestination = Random.Range(0, targetPoints.Count);
         actualDestination = targetPoints[indexNextDestination].GivePoint();
         agent.SetDestination(actualDestination);
         indexNextDestination++;
@@ -40,5 +43,14 @@ public class TobyManager : MonoBehaviour
         {
             indexNextDestination = 0;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if(agent != null)
+        {
+            Gizmos.DrawSphere(transform.position + Vector3.up * 2, 0.05f + (100 - agent.avoidancePriority) * 0.01f);   // vector3.UP (0,1,0))
+        }
+        
     }
 }
